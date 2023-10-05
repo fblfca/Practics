@@ -1,0 +1,80 @@
+import random
+rows = 'ABCDEFGH'
+digits = [' ']*64
+stroke, row = {}, {}
+#процедура случайного заполнения поля точками
+for i in range(random.randint(16,30)):
+    digits[random.randint(0,63)] = '■'
+#функция по выводу интерактивного игрового поля
+def playground():
+    print(' ','--'*17)
+    for i in range(0,64,8):
+        print(str(int((64-i)/8)),'|',digits[i],'|',digits[i+1],'|',digits[i+2],'|',digits[i+3],'|',digits[i+4],'|',digits[i+5],'|',digits[i+6],'|',digits[i+7],'|')
+        print(' ','--'*17)
+    print('   ','A',' ','B',' ','C',' ','D',' ','E',' ','F',' ','G',' ','H')
+    return ''
+#заполнение словарей по рядам и строкам поля\
+#(каждому ключу словарей соответствуют ряды и строки интерактивного игрового поля)
+for i in range(1,9):
+    for j in range(8):
+        if str(9-i) not in stroke:
+            stroke[str(9-i)] = [8*(i-1)+j]
+            continue
+        if str(9-i) in stroke:
+            stroke[str(9-i)].append(8*(i-1)+j)
+for i in range(len(rows)):
+    for j in range(8):
+        if rows[i] not in row:
+            row[rows[i]] = [i+j*8]
+        else:
+            row[rows[i]].append(i+j*8)
+#Функция для интерактивных действий между игроками и компьютером
+def player_action():
+    player = 0
+    while True:
+        #проверка на наличие точек на интерактивном игровом поле
+        if '■' not in digits:
+            break
+        print('Введите 1-9 или A-H:')
+        move = str(input())
+        counter = 0
+        #цикл для очистки выбранной игроком строки
+        if move =='1' or move =='2' or move =='3' or move =='4' or move =='5' or move =='6' or move =='7' or move =='8':
+            for i in stroke[move]:
+                if digits[i] == '■':
+                    counter +=1
+                    digits[i] = ' '
+            if counter == 0:
+                print('В этой строке не осталось точек, введите другое значение')
+                continue
+            else:
+                print(playground())
+        #цикл для очистки выбранного игроком столбца
+        elif move =='A' or move =='B' or move =='C' or move =='D' or move =='E' or move =='F' or move =='G' or move =='H':
+            for i in row[move]:
+                    if digits[i] == '■':
+                        counter +=1
+                        digits[i] = ' '
+            if counter == 0:
+                print('В этом столбце не осталось точек, введите другое значение')
+                continue
+            else:
+                print(playground())
+        #проверка на корректность ввода данных игроком
+        elif move !='1' or move !='2' or move !='3' or move !='4' or move !='5' or move !='6' or move !='7' or move !='8' or\
+            move !='A' or move !='B' or move !='C' or move !='D' or move !='E' or move !='F' or move !='G' or move !='H':
+            print('формат ввода некорректен, введите либо 1-8 либо A-H')
+            continue
+        player += 1
+    if player % 2 == 0:
+        return ('выиграл игрок "2"!\nСпасибо, что сыграли в "Супер-Ним"!')
+    else:
+        return ('выиграл игрок "1"!\nСпасибо, что сыграли в "Супер-Ним"!')
+def game():
+    print('Добро пожаловать в игру "Супер-Ним"!')
+    print('Решите, кто будет игроком "1"\nА кто будет игроком "2"\nПосле того, как решили, нажмите Enter')
+    enter=input()
+    print(playground())
+    print(player_action())
+    return ('')
+print(game())
