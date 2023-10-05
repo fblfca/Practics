@@ -1,0 +1,96 @@
+letters,cells = 'ABCDE', []
+for i in range(20):
+    cells.append(' ')
+def playground():
+    print('--'*12)
+    for i in range(0,20,5):
+        print(str(int((i/5)+1)),'|',cells[i], '|',cells[i+1], '|',cells[i+2], '|',cells[i+3], '|',cells[i+4],'|' )
+        print('--'*12)
+    print('   ','A',' ','B',' ','C',' ','D',' ','E')
+    return('')
+#print(playground())
+column, stroke = {}, {}
+#заполнение строк и колонн идентификаторами
+for i in range(4):
+    for j in range(5):
+        if str(i+1) not in stroke:
+            stroke[str(i+1)] = [i*5+j]
+        else:
+            stroke[str(i+1)].append(i*5+j)
+for i in range(len(letters)):
+    for j in range(4):
+        if letters[i] not in column:
+            column[letters[i]] = [i+j*5]
+        else:
+            column[letters[i]].append(i+j*5)
+def turn(action):
+    coordinate = 0
+    for i in stroke[action[1]]:
+        for j in column[action[0]]:
+            if i == j:
+                coordinate = i
+                return (coordinate)
+            else:
+                pass
+def player_action():
+    player = 0
+    print('Введите комбинацию A-E + 1-4 без пробелов и знака "+"\nЧтобы поставить свой символ в клетку:')
+    while True:
+        if ' ' not in cells:
+            break
+        action = input()
+        if action[0] not in column or action[1] not in stroke or len(action) != 2:
+            print(action,'-','Неверный формат ввода\nВведите комбинацию A-E + 1-4 без пробелов и знака "+":')
+            continue
+        if cells[turn(action)] != ' ':
+            print('Клетка занята, введите координаты другой клетки:')
+            continue
+        elif ' ' in cells and player % 3 == 0:
+            cells[turn(action)] = '♥'
+            print(playground())
+            player+=1
+            continue
+        elif ' ' in cells and player % 3 == 1:
+            cells[turn(action)] = '♣'
+            print(playground())
+            player+=1
+            continue
+        elif ' ' in cells and player % 3 == 2:
+            cells[turn(action)] = '♠'
+            player+=1
+            print(playground())
+            continue
+    return('')
+def counters():
+    chervi, piki, kresti = {'♥':0}, {'♠':0}, {'♣':0}
+    for i in stroke:
+        symbols = stroke[i]
+        for j in range(len(symbols)-1):
+            if cells[symbols[j]] == '♥' and cells[symbols[j+1]] == '♥':
+                chervi['♥'] += 1
+            elif cells[symbols[j]] == '♣' and cells[symbols[j+1]] == '♣':
+                kresti['♣'] += 1
+            elif cells[symbols[j]] == '♠' and cells[symbols[j+1]] == '♠':
+                piki['♠'] += 1
+    for i in column:
+        symbols = column[i]
+        for j in range(len(symbols)-1):
+            if cells[symbols[j]] == '♥' and cells[symbols[j+1]] == '♥':
+                chervi['♥'] += 1
+            if cells[symbols[j]] == '♣' and cells[symbols[j+1]] == '♣':
+                kresti['♣'] += 1
+            if cells[symbols[j]] == '♠' and cells[symbols[j+1]] == '♠':
+                piki['♠'] += 1
+    print(f'У Червей {chervi["♥"]} соседей\nУ Крестей {kresti["♣"]} соседей\nУ Пик {piki["♠"]} соседей')
+    return ('Спасибо, что сыграли в "Лоскутное одеяло!!"')
+def game():
+    print ('Добро пожаловать в игру "Лоскутное одеяло"!\n\
+    Игра расчитана на трех человек\nРешите, кто из вас\n"1"-♥\n"2"-♣\n"3"-♠\n\
+    Выиграет тот, у кого будет меньше соседей на поле\nПотом нажмите Enter')
+    enter=input()
+    print (playground())
+    print(player_action())
+    print(counters())
+    return ('')
+print(game())
+
