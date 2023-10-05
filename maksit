@@ -1,0 +1,128 @@
+from random import randint
+letters, cells = 'ABC', [0]*9
+for i in range(9):
+    cells[i] = randint(1,9)
+def playground():
+    print(' ','---'*4)
+    for i in range (0,9,3):
+        print (str(int(i/3+1)),'|', cells[i], '|', cells[i+1], '|', cells[i+2], '|')
+        print(' ','---'*4)
+    print ('   ', 'A', ' ', 'B', ' ','C')
+    return ('')
+#print(playground())
+stroke, column = {}, {}
+for i in range(3):
+    for j in range(3):
+        if str(i+1) not in stroke:
+            stroke[str(i+1)] = [i*3+j]
+        else:
+            stroke[str(i+1)].append(i*3+j)
+for i in range(len(letters)):
+    for j in range(3):
+        if letters[i] not in column:
+            column[letters[i]] = [i+j*3]
+        else:
+            column[letters[i]].append(i+j*3)
+def turn(action):
+    coordinate = 0
+    for i in stroke[action[1]]:
+        for j in column[action[0]]:
+            if i == j:
+                coordinate = i
+                return (coordinate)
+            else:
+                pass
+def check_correct(action,last_action,parity):
+    flag = False
+    if parity == 0 or last_action == '':
+        return True
+    if parity % 2 == 1:
+        for i in column:
+            curent_column = column[i]
+            if turn(action) in curent_column and turn(last_action) in curent_column:
+                flag = True
+    if parity % 2 == 0:
+        for i in stroke:
+            curent_stroke = stroke[i]
+            if turn(action) in curent_stroke and turn(last_action) in curent_stroke:
+                flag = True
+    return flag
+def check_attempts(action,parity):
+    check = ''
+    if parity == 0:
+        return True
+    if parity % 2 == 1:
+        for i in stroke[action[1]]:
+            check += str(cells[i])
+        if check == '   ':
+            return False
+        else:
+            return True
+    if parity % 2 == 0:
+        for i in column[action[0]]:
+            check += str(cells[i])
+        if check == '   ':
+            return False
+        else:
+            return True
+def possible_to_play_check():
+    check_stroke = ''
+    for i in cells:
+        check_stroke += str(i)
+    if check_stroke == '         ':
+        return True
+    else:
+        return False
+def player_action():
+    player1, player2, parity, last_action = 0, 0, 0, ''
+    print(playground())
+    while True:
+        if possible_to_play_check():
+            break
+        if parity % 2 == 0:
+            print('Ход первого игрока:')
+            action = input('Введите комбинацию A-C + 1-3 без пробела и знака "+":')
+        if parity % 2 == 1:
+            print('Ход второго игрока:')
+            action = input('Введите комбинацию A-C + 1-3 без пробела и знака "+":')
+        if action[0] not in column or action[1] not in stroke or len(action) != 2:
+            print('Неверный формат ввода')
+            continue
+        if cells[turn(action)] == ' ':
+            print('Нельзя выбирать пустые поля, выберите то поле, в котором есть число')
+            continue
+        if not check_correct(action, last_action, parity):
+            print('Такой ход невозможен')
+            continue
+        if parity % 2 == 0:
+            player1 += cells[turn(action)]
+            cells[turn(action)] = ' '
+            print(playground())
+            last_action = action
+            if check_attempts(action, parity):
+                parity += 1
+            print(f'У первого игрока:{player1}\nУ второго игрока:{player2}')
+            continue
+        if parity % 2 == 1:
+            player2 += cells[turn(action)]
+            cells[turn(action)] = ' '
+            print(playground())
+            last_action = action
+            if check_attempts(action, parity):
+                parity += 1
+            print(f'У первого игрока:{player1}\nУ второго игрока:{player2}')
+            continue
+    if player1 > player2:
+        return (f'Победил первый игрок!')
+    if player1 < player2:
+        return (f'Победил второй игрок!')
+    if player1 == player2:
+        return (f'Ничья!')
+def game():
+    print ('Добро пожаловать в игру "Максит"!\n\
+    Игра расчитана на двух человек\nРешите, кто из вас "1", а кто "2" игрок\n\
+    Проиграет тот, кто наберет меньше очков\nНажмите Enter чтобы начать!')
+    enter=input()
+    print(player_action())
+    return ('Спасибо, что сыграли в игру "Максит"!')
+print(game())
