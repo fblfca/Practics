@@ -1,0 +1,81 @@
+from random import shuffle
+digits,letters,cells = [],'ABCD', []
+for i in range(1,16):
+    digits.append(i)
+shuffle(digits)
+for i in range(15):
+    cells.append(digits[i])
+cells.append(' ')
+def playground():
+    print('--'*10+'-')
+    for i in range(0,16,4):
+        print(str(int((i/4)+1)), '|',cells[i], '|',cells[i+1], '|',cells[i+2], '|',cells[i+3], '|')
+        print('--'*10+'-')
+    print('   ','A','  ','B',' ','C',' ','D')
+    return('')
+stroke, column = {}, {}
+for i in range(4):
+    for j in range(4):
+        if str(i+1) not in stroke:
+            stroke[str(i+1)] = [i*4+j]
+        else:
+            stroke[str(i+1)].append(i*4+j)
+for i in range(len(letters)):
+    for j in range(4):
+        if letters[i] not in column:
+            column[letters[i]] = [i+j*4]
+        else:
+            column[letters[i]].append(i+j*4)
+def turn(move):
+    coordinate = 0
+    for i in stroke[move[1]]:
+        for j in column[move[0]]:
+            if i == j:
+                coordinate = i
+                return (coordinate)
+            else:
+                pass
+def win_condition():
+    for i in range(15):
+        if cells[i] == i + 1:
+            pass
+        else:
+            return False
+    return True
+def check_correct(move,void):
+    for i in stroke:
+        curent_stroke = stroke[i]
+        if turn(move) in curent_stroke and void in curent_stroke and abs(turn(move) - void) == 1:
+            return True
+    for i in column:
+        curent_column = column[i]
+        if turn(move) in curent_column and void in curent_column and abs(turn(move) - void) == 4:
+            return True
+    return False
+def player_action():
+    counter, void = 0, 15
+    while True:
+        print(playground())
+        if win_condition():
+            break
+        move = input ('Введите комбинацию A-D + 1-4 без пробелов и знака "+":')
+        if move[0] not in column or move[1] not in stroke or len(move) != 2:
+            print('Неверный формат ввода')
+            continue
+        if  not check_correct(move,void):
+            print('Нельзя поменять местами пустую клетку со значением в несоседней с ней клетке')
+            continue
+        if turn(move) == void:
+            print('Нельзя выбирать клетку, в которой ничего нет')
+            continue
+        cells[void] = cells[turn(move)]
+        cells[turn(move)] = ' '
+        void = turn(move)
+        counter+=1
+    return (f'Число попыток:{counter}')
+def game():
+    print('Добро пожаловать в игру "Пятнашки"!\nКогда будете готовы играть, нажмите Enter:')
+    Enter=input()
+    print(player_action())
+    return ('Спасибо, что сыграли в "Пятнашки"!')
+print(game())
