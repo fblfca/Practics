@@ -1,4 +1,3 @@
-from random import randint
 from itertools import permutations
 import random
 for i in permutations(random.sample('0123456789',4)):
