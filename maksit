@@ -9,7 +9,6 @@ def playground():
         print(' ','---'*4)
     print ('   ', 'A', ' ', 'B', ' ','C')
     return ('')
-#print(playground())
 stroke, column = {}, {}
 for i in range(3):
     for j in range(3):
