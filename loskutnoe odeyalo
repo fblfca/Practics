@@ -8,7 +8,6 @@ def playground():
         print('--'*12)
     print('   ','A',' ','B',' ','C',' ','D',' ','E')
     return('')
-#print(playground())
 column, stroke = {}, {}
 #заполнение строк и колонн идентификаторами
 for i in range(4):
